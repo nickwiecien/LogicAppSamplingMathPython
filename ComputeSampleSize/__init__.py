@@ -9,7 +9,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
     req_body = req.get_json()
-    SampleSize = float(req_body.get('SampleSize'))
+    SampleSize = float(int(req_body.get('SampleSize'))/100.0)
     TotalNumberOfImages = int(req_body.get('TotalNumberOfImages'))
 
     NumberOfImagesToProcess = int(SampleSize * TotalNumberOfImages)
