@@ -12,12 +12,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
     req_body = req.get_json()
-    pdf_bytes = base64.b64decode(req_body.get('data')['$content'])
-    # pdf_bytes = bytes(req_body.get('data'), 'utf-8')
-
-    # pdf_bytes = None
-    # with open('./sample.pdf', 'rb') as file:
-    #     pdf_bytes = file.read()
+    pdf_bytes = base64.b64decode(req_body.get('data'))
     tempdir = tempfile.gettempdir()
     temp_pdf = os.path.join(tempdir, 'upload.pdf')
     temp_png = os.path.join(tempdir, 'download.png')
@@ -25,7 +20,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     with open(temp_pdf, 'wb') as file:
         file.write(pdf_bytes)
 
-    # Modified from https://www.thepythoncode.com/article/convert-pdf-files-to-images-in-python
+    # Adapted from https://www.thepythoncode.com/article/convert-pdf-files-to-images-in-python
+    # Leverages https://github.com/pymupdf/PyMuPDF
     pages = None
     pdfIn = fitz.open(temp_pdf)
     output_files = []
@@ -34,18 +30,11 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         if str(pages) != str(None):
             if str(pg) not in str(pages):
                 continue
-        # Select a page
+        # Select a page - asumed single page
         page = pdfIn[pg]
         rotate = int(0)
-        # PDF Page is converted into a whole picture 1056*816 and then for each picture a screenshot is taken.
-        # zoom = 1.33333333 -----> Image size = 1056*816
-        # zoom = 2 ---> 2 * Default Resolution (text is clear, image text is hard to read)    = filesize small / Image size = 1584*1224
-        # zoom = 4 ---> 4 * Default Resolution (text is clear, image text is barely readable) = filesize large
-        # zoom = 8 ---> 8 * Default Resolution (text is clear, image text is readable) = filesize large
         zoom_x = 2
         zoom_y = 2
-        # The zoom factor is equal to 2 in order to make text clear
-        # Pre-rotate is to rotate if needed.
         mat = fitz.Matrix(zoom_x, zoom_y).preRotate(rotate)
         pix = page.getPixmap(matrix=mat, alpha=False)
         output_file = temp_png
