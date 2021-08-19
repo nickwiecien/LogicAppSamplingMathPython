@@ -53,7 +53,10 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
         spaceless_results = {}
         for k,v in results.items():
-            spaceless_results[k.replace(' ', '_')] = v
+            if k.replace(' ', '_')=='3M_ID':
+                spaceless_results['MMM_ID'] = v
+            else:
+                spaceless_results[k.replace(' ', '_')] = v
 
         #Retrun results json record with custom vision & form recognizer data
         return func.HttpResponse(json.dumps(spaceless_results), status_code=200)
