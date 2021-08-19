@@ -50,8 +50,12 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             for k,v in doc['fields'].items():
                 results[k] = v['valueString']
 
+        spaceless_results = {}
+        for k,v in results.items():
+            spaceless_results[k.replace(' ', '_')] = v
+
         #Retrun results json record with custom vision & form recognizer data
-        return func.HttpResponse(json.dumps(results), status_code=200)
+        return func.HttpResponse(json.dumps(spaceless_results), status_code=200)
 
         # Deprecated code for export results to Excel and uploading to Blob Storage
         # #Get temporary directory
