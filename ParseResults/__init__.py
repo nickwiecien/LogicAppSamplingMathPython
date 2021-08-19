@@ -20,9 +20,15 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         #Get custom vision/form recognizer results from body
         customVisionResults = req_body.get('customVisionResponse')
         formRecognizerResults = req_body.get('formsRecognizerResponse')
+        PartitionKey = req_body.get('PartitionKey')
+        RowKey = req_body.get('RowKey')
 
         #Store formatted results in a dictionary - will be converted to a Pandas dataframe
         results = {}
+
+        #Add partition key and row key
+        results['PartitionKey'] = PartitionKey
+        results['RowKey'] = RowKey
 
         #Iterate over custom vision results - store highest scoring symbol
         #Optional: Implement symbol-specific thresholds
