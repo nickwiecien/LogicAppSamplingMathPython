@@ -53,7 +53,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
         spaceless_results = {}
         for k,v in results.items():
-            if k.replace(' ', '_')=='3MID':
+            if k=='3MID':
                 spaceless_results['MMM_ID'] = v
             else:
                 spaceless_results[k.replace(' ', '_')] = v
