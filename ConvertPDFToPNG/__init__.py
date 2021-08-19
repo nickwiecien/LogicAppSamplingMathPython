@@ -42,8 +42,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         output_files.append(output_file)
     pdfIn.close()
         
-    
-        
     out_bytes = None
     with open(temp_png, 'rb') as file:
         out_bytes = file.read()
