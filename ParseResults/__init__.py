@@ -48,7 +48,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             
         for doc in formRecognizerResults['analyzeResult']['documentResults']:
             for k,v in doc['fields'].items():
-                results[k] = v['valueString']
+                if v is not None:
+                    results[k] = v['valueString']
 
         spaceless_results = {}
         for k,v in results.items():
